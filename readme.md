@@ -6,7 +6,7 @@
 
 > Una suite de herramientas de criptografía y seguridad ejecutándose 100% en el navegador. Diseño moderno "Glassmorphism" con lógica de análisis de contraseñas de nivel forense.
 
-![GlassVault Screenshot](assets/screenshot.png)
+![GlassVault Screenshot](fotos/image.png)
 *(¡No olvides subir una captura de pantalla de tu web a una carpeta 'assets' y cambiar esta ruta!)*
 
 ## 📋 Descripción
