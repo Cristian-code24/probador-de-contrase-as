@@ -83,5 +83,5 @@ Este proyecto está bajo la Licencia MIT - eres libre de usarlo, modificarlo y a
 
 ---
 <div align="center">
-  <sub>Desarrollado con ❤️ y mucho café por [Tu Nombre]</sub>
+  <sub>Desarrollado con ❤️ y mucho café por [cristian_lucas]</sub>
 </div>
