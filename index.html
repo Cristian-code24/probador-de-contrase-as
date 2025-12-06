@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glass Vault | Suite de Seguridad</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .checklist-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 1rem; }
+        .check-item { text-align: center; font-size: 0.75rem; padding: 4px; border-radius: 4px; background: rgba(255,255,255,0.05); opacity: 0.4; transition: 0.3s; }
+        .check-item.active { background: var(--success, #2ecc71); color: black; opacity: 1; font-weight: bold; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 1rem; }
+        .stat-box { background: rgba(0,0,0,0.2); padding: 8px; border-radius: 8px; text-align: center; }
+        .stat-box small { display: block; font-size: 0.7em; opacity: 0.7; margin-bottom: 2px; }
+        .stat-box strong { font-size: 0.85em; color: var(--accent, #00d2ff); }
+
+        .hash-box { font-family: 'Courier New', monospace; font-size: 0.75rem; word-break: break-all; color: #888; margin-top: 5px; min-height: 1.2em; }
+        
+        .rec-container { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+        .rec-item { background: rgba(255, 77, 77, 0.1); border-left: 3px solid #ff4d4d; padding: 8px; font-size: 0.8rem; border-radius: 0 4px 4px 0; }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="glass-nav">
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span class="nav-brand">GlassVault</span>
+        </div>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="icon-btn glass-btn icon-only" aria-label="Cambiar Tema">
+                <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <section class="glass-card hero-card text-center animate-in">
+            <h1>Ciberseguridad <span class="gradient-text">Transparente</span></h1>
+            <p>Análisis de entropía, Hashing SHA-256 y generación segura.</p>
+        </section>
+
+        <div class="grid-system">
+
+            <section class="glass-card animate-in delay-100">
+                <div class="card-header flex-between mb-2">
+                    <h2>Analizador</h2>
+                    <span class="badge badge-success">Local Check</span>
+                </div>
+                
+                <div class="input-group">
+                    <input type="text" id="password-input" class="glass-input" placeholder="Escribe tu contraseña..." autocomplete="off">
+                </div>
+
+                <div id="hash-display" class="hash-box mb-2"></div>
+
+                <div class="checklist-grid">
+                    <div class="check-item" data-check="lower">abc</div>
+                    <div class="check-item" data-check="upper">ABC</div>
+                    <div class="check-item" data-check="num">123</div>
+                    <div class="check-item" data-check="sym">#@!</div>
+                    <div class="check-item" data-check="len">12+</div>
+                </div>
+
+                <div class="strength-meter-container mb-2">
+                    <div class="strength-meter">
+                        <div id="strength-bar" class="strength-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="flex-between mt-2">
+                        <small id="strength-text" class="text-muted">Esperando input...</small>
+                        <small id="entropy-text" class="text-muted">0 bits</small>
+                    </div>
+                </div>
+
+                <div id="recommendations" class="rec-container"></div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <small>Hacker (Laptop)</small>
+                        <strong id="time-human">-</strong>
+                    </div>
+                    <div class="stat-box">
+                        <small>RTX 4090</small>
+                        <strong id="time-gpu">-</strong>
+                    </div>
+                    <div class="stat-box">
+                        <small>Granja Minería</small>
+                        <strong id="time-super">-</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-card animate-in delay-200">
+                <h2>Generador</h2>
+                
+                <div class="generator-controls flex-col gap-md mb-2">
+                    <div class="slider-container">
+                        <div class="flex-between mb-2">
+                            <label>Longitud</label>
+                            <span id="length-val" class="badge">16</span>
+                        </div>
+                        <input type="range" id="length-range" min="8" max="64" value="16">
+                    </div>
+                    
+                    <div class="flex-between">
+                        <label><input type="checkbox" id="gen-upper" checked> A-Z</label>
+                        <label><input type="checkbox" id="gen-num" checked> 0-9</label>
+                        <label><input type="checkbox" id="gen-sym" checked> #@!</label>
+                    </div>
+                </div>
+
+                <div class="input-group flex-center gap-sm">
+                    <input type="text" id="gen-result" class="glass-input text-center" readonly value="" placeholder="Resultado..." style="font-family: var(--font-mono);">
+                    <button id="btn-copy" class="glass-btn btn-glass icon-only" title="Copiar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                </div>
+                
+                <button id="btn-generate" class="glass-btn btn-primary w-100 mt-2">Generar Nueva</button>
+            </section>
+
+        </div>
+        <section class="glass-card animate-in delay-300 mt-2">
+            <div class="card-header flex-between mb-2">
+                <h2>Email Fantasma</h2>
+                <span class="badge badge-warning">Simulación</span>
+            </div>
+            <p>Genera una identidad local efímera para pruebas de UI. No conecta a internet.</p>
+
+            <div class="email-display-area hidden mb-2" id="email-area">
+                <div class="glass-input text-center mb-2">
+                    <span id="temp-email-text" style="font-family: var(--font-mono); color: var(--accent);">cargando...</span>
+                </div>
+                <div class="text-center">
+                    <span class="badge badge-danger" id="email-timer">10:00</span>
+                </div>
+            </div>
+
+            <button id="btn-create-email" class="glass-btn w-100">Generar Identidad</button>
+        </section>
+<!-- ⚡ Derechos reservados -->
+<footer class="text-center mt-3">
+    <p class="small-text" style="opacity: 0.7;">
+        © 2025 — Todos los derechos reservados. 
+        Creado por 
+        <a href="https://www.facebook.com/share/1DoU8cGCG5/" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           style="color: var(--accent); text-decoration: none; font-weight: 600;">
+            Cristian Lucas
+        </a>.
+    </p>
+</footer>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
